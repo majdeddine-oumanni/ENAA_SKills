@@ -2,7 +2,9 @@ package com.skills.backend.Service;
 
 import com.skills.backend.DTO.SubCompetenceDTO;
 import com.skills.backend.Mapper.SubCompetenceMapper;
+import com.skills.backend.Model.Competence;
 import com.skills.backend.Model.SubCompetence;
+import com.skills.backend.Repository.CompetenceRepository;
 import com.skills.backend.Repository.SubCompetenceRepository;
 import org.springframework.stereotype.Service;
 
@@ -12,14 +14,19 @@ import java.util.List;
 public class SubCompetenceService {
     private final SubCompetenceMapper mapper;
     private final SubCompetenceRepository repository;
+    private final CompetenceRepository competenceRepository;
 
-    public SubCompetenceService(SubCompetenceMapper mapper, SubCompetenceRepository repository) {
+    public SubCompetenceService(SubCompetenceMapper mapper, SubCompetenceRepository repository, CompetenceRepository competenceRepository) {
         this.mapper = mapper;
         this.repository = repository;
+        this.competenceRepository = competenceRepository;
     }
 
     public SubCompetenceDTO add(SubCompetenceDTO dto){
         SubCompetence subCompetence = mapper.toEntity(dto);
+        Competence competence = competenceRepository.findById(dto.getCompetence_id())
+                .orElseThrow(()->new RuntimeException("competence not found"));
+        subCompetence.setCompetence(competence);
         SubCompetence saved = repository.save(subCompetence);
         return mapper.toDTO(saved);
     }

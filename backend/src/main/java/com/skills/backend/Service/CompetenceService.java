@@ -1,9 +1,13 @@
 package com.skills.backend.Service;
 
 import com.skills.backend.DTO.CompetenceDTO;
+import com.skills.backend.DTO.SubCompetenceDTO;
 import com.skills.backend.Mapper.CompetenceMapper;
+import com.skills.backend.Mapper.SubCompetenceMapper;
 import com.skills.backend.Model.Competence;
+import com.skills.backend.Model.SubCompetence;
 import com.skills.backend.Repository.CompetenceRepository;
+import com.skills.backend.Repository.SubCompetenceRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -12,10 +16,14 @@ import java.util.List;
 public class CompetenceService {
     private final CompetenceMapper mapper;
     private final CompetenceRepository repository;
+    private final SubCompetenceRepository subCompetenceRepository;
+    private final SubCompetenceMapper subCompetenceMapper;
 
-    public CompetenceService(CompetenceMapper mapper, CompetenceRepository repository) {
+    public CompetenceService(CompetenceMapper mapper, CompetenceRepository repository, SubCompetenceRepository subCompetenceRepository, SubCompetenceMapper subCompetenceMapper) {
         this.mapper = mapper;
         this.repository = repository;
+        this.subCompetenceRepository = subCompetenceRepository;
+        this.subCompetenceMapper = subCompetenceMapper;
     }
 
     public CompetenceDTO post(CompetenceDTO dto){
@@ -39,5 +47,11 @@ public class CompetenceService {
 
     public void delete(Long id){
         repository.deleteById(id);
+    }
+
+    public List<SubCompetenceDTO> getByCompetence(Long id){
+        List<SubCompetence> subCompetenceList = subCompetenceRepository.findAllByCompetence_Id(id);
+        List<SubCompetenceDTO> subCompetenceDTOList = subCompetenceMapper.toDTOs(subCompetenceList);
+        return subCompetenceDTOList;
     }
 }

@@ -10,7 +10,6 @@ import java.util.List;
 @NoArgsConstructor
 public class CompetenceDTO {
     private String name;
-    private List<SubCompetence> competenceList;
 
     public String getName() {
         return name;
@@ -20,11 +19,4 @@ public class CompetenceDTO {
         this.name = name;
     }
 
-    public List<SubCompetence> getCompetenceList() {
-        return competenceList;
-    }
-
-    public void setCompetenceList(List<SubCompetence> competenceList) {
-        this.competenceList = competenceList;
-    }
 }
