@@ -35,14 +35,20 @@ public class SubCompetenceService {
         SubCompetence subCompetence = repository.findById(id)
                 .orElseThrow(()-> new RuntimeException("subCompetence not found"));
         subCompetence.setName(dto.getName());
-        subCompetence.setValidated(dto.isValidated());
         return mapper.toDTO(repository.save(subCompetence));
+    }
+
+    public SubCompetenceDTO updateValidation(Long id, boolean isValidated){
+        SubCompetence subCompetence = repository.findById(id)
+                .orElseThrow(()->new RuntimeException("SubCompetence not found"));
+        subCompetence.setValidated(isValidated);
+        SubCompetence saved = repository.save(subCompetence);
+        return mapper.toDTO(saved);
     }
 
     public List<SubCompetenceDTO> getAll(){
         List<SubCompetence> subCompetenceList = repository.findAll();
-        List<SubCompetenceDTO> subCompetenceDTOList = mapper.toDTOs(subCompetenceList);
-        return subCompetenceDTOList;
+        return mapper.toDTOs(subCompetenceList);
     }
 
     public void delete(Long id){

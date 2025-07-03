@@ -34,4 +34,9 @@ public class SubCompetenceController {
     public void delete(@PathVariable Long id){
         service.delete(id);
     }
+
+    @PatchMapping("/isValid/{id}")
+    public SubCompetenceDTO updateValidation(@PathVariable Long id, @RequestParam boolean isValid){
+        return service.updateValidation(id, isValid);
+    }
 }

@@ -17,8 +17,37 @@ public class Competence {
 
     private String name;
 
+    private String description;
+
     @OneToMany(mappedBy = "competence")
     List<SubCompetence> subCompetenceList = new ArrayList<>();
+
+    public boolean isAcquired() {
+        return subCompetenceList != null &&
+                !subCompetenceList.isEmpty() &&
+                //subCompetenceList.stream().allMatch(sub -> sub.isValidated());
+                subCompetenceList.stream().allMatch(SubCompetence::isValidated);
+    }
+
+    /* public boolean SimpleIsAcquired(){
+        if(subCompetenceList == null || subCompetenceList.isEmpty()){
+            return false;
+        }
+        for (SubCompetence sc: subCompetenceList){
+            if (!sc.isValidated()){
+                return false;
+            }
+        }
+        return true;
+    }*/
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 
     public Long getId() {
         return id;

@@ -10,6 +10,24 @@ import java.util.List;
 @NoArgsConstructor
 public class CompetenceDTO {
     private String name;
+    private boolean acquired;
+    private String description;
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public boolean isAcquired() {
+        return acquired;
+    }
+
+    public void setAcquired(boolean acquired) {
+        this.acquired = acquired;
+    }
 
     public String getName() {
         return name;

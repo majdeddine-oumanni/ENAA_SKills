@@ -36,6 +36,7 @@ public class CompetenceService {
         Competence competence = repository.findById(id)
                 .orElseThrow(()->new RuntimeException("competence not found"));
         competence.setName(dto.getName());
+        competence.setDescription(dto.getDescription());
         CompetenceDTO competenceDTO = mapper.toDTO(repository.save(competence));
         return competenceDTO;
     }
@@ -53,5 +54,11 @@ public class CompetenceService {
         List<SubCompetence> subCompetenceList = subCompetenceRepository.findAllByCompetence_Id(id);
         List<SubCompetenceDTO> subCompetenceDTOList = subCompetenceMapper.toDTOs(subCompetenceList);
         return subCompetenceDTOList;
+    }
+
+    public CompetenceDTO getById(Long id){
+        Competence foundCompetence = repository.findById(id)
+                .orElseThrow(()-> new RuntimeException("competence not found"));
+        return mapper.toDTO(foundCompetence);
     }
 }

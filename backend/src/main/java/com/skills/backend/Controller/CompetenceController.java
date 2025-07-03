@@ -36,8 +36,14 @@ public class CompetenceController {
         service.delete(id);
     }
 
+
     @GetMapping("/getSubs/{id}")
     public List<SubCompetenceDTO> get(@PathVariable Long id){
         return service.getByCompetence(id);
+    }
+
+    @GetMapping("/getById/{id}")
+    public CompetenceDTO getById(@PathVariable Long id){
+        return service.getById(id);
     }
 }
