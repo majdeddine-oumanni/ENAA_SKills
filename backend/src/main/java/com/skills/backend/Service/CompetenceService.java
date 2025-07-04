@@ -37,8 +37,7 @@ public class CompetenceService {
                 .orElseThrow(()->new RuntimeException("competence not found"));
         competence.setName(dto.getName());
         competence.setDescription(dto.getDescription());
-        CompetenceDTO competenceDTO = mapper.toDTO(repository.save(competence));
-        return competenceDTO;
+        return mapper.toDTO(repository.save(competence));
     }
 
     public List<CompetenceDTO> getAll(){

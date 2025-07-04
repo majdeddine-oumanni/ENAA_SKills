@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
 import java.util.List;
+import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
@@ -96,6 +97,32 @@ class CompetenceServiceTest {
 
     @Test
     void testUpdateTheCompetence(){
+        Long id = 1L;
+        CompetenceDTO enteredDTO = new CompetenceDTO();
+        enteredDTO.setName("docker");
+        enteredDTO.setDescription("app container");
 
+        Competence existingCompetence = new Competence();
+        existingCompetence.setId(id);
+        existingCompetence.setName("Podman");
+        existingCompetence.setDescription("api container");
+
+        Competence afterUpdate = new Competence();
+        afterUpdate.setId(id);
+        afterUpdate.setName("docker");
+        afterUpdate.setDescription("app container");
+
+        CompetenceDTO returnedDTO = new CompetenceDTO();
+        returnedDTO.setName("docker");
+        returnedDTO.setDescription("app container");
+
+        when(repository.findById(id)).thenReturn(Optional.of(existingCompetence));
+        when(repository.save(existingCompetence)).thenReturn(afterUpdate);
+        when(mapper.toDTO(afterUpdate)).thenReturn(returnedDTO);
+
+        CompetenceDTO result = service.update(id, enteredDTO);
+
+        assertEquals("docker", result.getName());
+        assertEquals("app container", result.getDescription());
     }
 }
