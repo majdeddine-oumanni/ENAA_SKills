@@ -13,8 +13,7 @@ import java.util.List;
 import java.util.Optional;
 
 import static org.junit.jupiter.api.Assertions.*;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
+import static org.mockito.Mockito.*;
 
 class CompetenceServiceTest {
 
@@ -125,4 +124,18 @@ class CompetenceServiceTest {
         assertEquals("docker", result.getName());
         assertEquals("app container", result.getDescription());
     }
+
+    @Test
+    public void testDeleteCompetence() {
+        Long id = 1L;
+
+        // Step 1: No need to mock anything because deleteById is void
+
+        // Step 2: Call the method
+        service.delete(id);
+
+        // Step 3: Verify that repository.deleteById was called once with the correct id
+        verify(repository).deleteById(id);
+    }
+
 }
