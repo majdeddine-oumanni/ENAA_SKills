@@ -9,22 +9,25 @@ import com.skills.backend.Repository.SubCompetenceRepository;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
 
+import java.util.List;
+
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
 class CompetenceServiceTest {
 
+    // Step 1: Create mocks (fake objects)
+    CompetenceRepository repository = mock(CompetenceRepository.class);
+    CompetenceMapper mapper = mock(CompetenceMapper.class);
+    SubCompetenceRepository subCompetenceRepository = mock(SubCompetenceRepository.class);
+    SubCompetenceMapper subCompetenceMapper = mock(SubCompetenceMapper.class);
+
+    // Step 2: Create the service using the mocks
+    CompetenceService service = new CompetenceService(mapper, repository, subCompetenceRepository, subCompetenceMapper);
+
     @Test
     public void testPostWithValues() {
-        // Step 1: Create mocks (fake objects)
-        CompetenceRepository repository = mock(CompetenceRepository.class);
-        CompetenceMapper mapper = mock(CompetenceMapper.class);
-        SubCompetenceRepository subCompetenceRepository = mock(SubCompetenceRepository.class);
-        SubCompetenceMapper subCompetenceMapper = mock(SubCompetenceMapper.class);
-
-        // Step 2: Create the service using the mocks
-        CompetenceService service = new CompetenceService(mapper, repository, subCompetenceRepository, subCompetenceMapper);
 
         // Step 3: Create real example values
         CompetenceDTO inputDTO = new CompetenceDTO();
@@ -55,5 +58,44 @@ class CompetenceServiceTest {
         // Step 6: Check the result is what we expected
         assertEquals(outputDTO.getName(), result.getName());
         assertEquals(outputDTO.getDescription(), result.getDescription());
+    }
+
+    @Test
+    public void testTheGetAll(){
+        Competence entity1 = new Competence();
+        entity1.setId(1L);
+        entity1.setName("Angular");
+        entity1.setDescription("frontend technology");
+
+        Competence entity2 = new Competence();
+        entity2.setId(2L);
+        entity2.setName("Spring Boot");
+        entity2.setDescription("Spring Boot Intro");
+
+        List<Competence> entityList = List.of(entity1, entity2);
+
+        CompetenceDTO competenceDTO1 = new CompetenceDTO();
+        competenceDTO1.setName("Angular");
+        competenceDTO1.setDescription("frontend technology");
+
+        CompetenceDTO competenceDTO2 = new CompetenceDTO();
+        competenceDTO2.setName("Spring Boot");
+        competenceDTO2.setDescription("Spring Boot Intro");
+
+        List<CompetenceDTO> expectedDtoList = List.of(competenceDTO1, competenceDTO2);
+
+        when(repository.findAll()).thenReturn(entityList);
+        when(mapper.toDTOs(entityList)).thenReturn(expectedDtoList);
+
+        List<CompetenceDTO> result = service.getAll();
+
+        assertEquals(2, result.size());
+        assertEquals("Angular", result.get(0).getName());
+        assertEquals("Spring Boot", result.get(1).getName());
+    }
+
+    @Test
+    void testUpdateTheCompetence(){
+
     }
 }
