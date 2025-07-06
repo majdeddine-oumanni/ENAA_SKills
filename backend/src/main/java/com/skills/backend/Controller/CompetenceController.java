@@ -3,8 +3,11 @@ package com.skills.backend.Controller;
 import com.skills.backend.DTO.CompetenceDTO;
 import com.skills.backend.DTO.SubCompetenceDTO;
 import com.skills.backend.Service.CompetenceService;
+import io.swagger.v3.oas.annotations.Operation;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.IOException;
 import java.util.List;
 
 @RestController
@@ -45,5 +48,11 @@ public class CompetenceController {
     @GetMapping("/getById/{id}")
     public CompetenceDTO getById(@PathVariable Long id){
         return service.getById(id);
+    }
+
+    @GetMapping("/export")
+    @Operation(summary = "Export progression report as Excel")
+    public void exportExcel(HttpServletResponse response) throws IOException {
+        service.exportProgressReport(response);
     }
 }

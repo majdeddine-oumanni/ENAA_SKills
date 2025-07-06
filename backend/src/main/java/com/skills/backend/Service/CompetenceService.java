@@ -8,8 +8,14 @@ import com.skills.backend.Model.Competence;
 import com.skills.backend.Model.SubCompetence;
 import com.skills.backend.Repository.CompetenceRepository;
 import com.skills.backend.Repository.SubCompetenceRepository;
+import jakarta.servlet.http.HttpServletResponse;
+import org.apache.poi.ss.usermodel.Row;
+import org.apache.poi.ss.usermodel.Sheet;
+import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
 import java.util.List;
 
 @Service
@@ -59,5 +65,36 @@ public class CompetenceService {
         Competence foundCompetence = repository.findById(id)
                 .orElseThrow(()-> new RuntimeException("competence not found"));
         return mapper.toDTO(foundCompetence);
+    }
+
+    public void exportProgressReport(HttpServletResponse response) throws IOException {
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        response.setHeader("Content-Disposition", "attachment; filename=progress_report.xlsx");
+
+        List<Competence> competenceList = repository.findAll();
+
+        Workbook workbook = new XSSFWorkbook();
+        Sheet sheet = workbook.createSheet("Progress Report");
+
+        // Header row
+        Row header = sheet.createRow(0);
+        header.createCell(0).setCellValue("Competence");
+        header.createCell(1).setCellValue("Sub-Competence");
+        header.createCell(2).setCellValue("Validated");
+
+        int rowNum = 1;
+
+        for (Competence competence : competenceList) {
+            List<SubCompetence> subCompetences = subCompetenceRepository.findAllByCompetence_Id(competence.getId());
+            for (SubCompetence sub : subCompetences) {
+                Row row = sheet.createRow(rowNum++);
+                row.createCell(0).setCellValue(competence.getName());
+                row.createCell(1).setCellValue(sub.getName());
+                row.createCell(2).setCellValue(sub.isValidated() ? "Yes" : "No");
+            }
+        }
+
+        workbook.write(response.getOutputStream());
+        workbook.close();
     }
 }
